@@ -80,7 +80,7 @@ public:
   */
   uint16_t stop();
   /*!
-    @brief Return false si le défilement continue, ou true s'il est arrêté
+    @brief Return true si le défilement continue, ou false s'il est arrêté
   */
   bool isStopped();
   /*!
