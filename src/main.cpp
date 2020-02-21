@@ -15,6 +15,13 @@ const char *SSID = NetworkName;         // Nom du réseau WIFI
 const char *PASSWORD = NetworkPassword; // Mot de passe du réseau WIFI
 WiFiClient wifiClient;
 void setup_wifi();
+// Set your Static IP address
+IPAddress local_IP(192, 168, 43, 132);// Set your Static IP address
+// Set your Gateway IP address
+IPAddress gateway(192, 168, 43, 255);
+
+IPAddress subnet(255, 255, 255, 0);
+// Set your Gateway IP address
 
 /////////////////////////////////////////// Timer //////////////////////
 #if OUTPUT_SERIAL_PRINT
@@ -57,6 +64,9 @@ void setup()
   m_ruban->setColor(m_color[0], m_color[1], m_color[2]);
   m_ruban->setMotif(m_motif);
 
+  // Déclaration d'un client pour le WIFI
+  // WiFiClient wifiClient;
+  setup_wifi();
   ////////// Tests
   pinMode(REDPIN, OUTPUT);
   pinMode(GREENPIN, OUTPUT);
@@ -73,61 +83,62 @@ void loop()
     interruptCounter = false;
     portEXIT_CRITICAL(&timerMux);
 
-////////// TEst
-Serial.println("digitalWrite");
-digitalWrite(REDPIN, HIGH);
+    ////////// TEst
+    Serial.println("digitalWrite");
+    digitalWrite(REDPIN, HIGH);
 #if OUTPUT_SERIAL_PRINT
     totalInterruptCounter++; //
     Serial.print("An interrupt as occurred. Total number: ");
     Serial.println(totalInterruptCounter);
 #endif
     //On gère le ruban m_stripe
-//     if (m_ruban->isStopped() == false) // on ne fait rien si le ruban est arrêté
-//     {
-//       if (m_nbBoucle == -1) // nombre de boucles infini
-//       {
-//         m_currentLed = m_ruban->nextStep();
-// #if OUTPUT_SERIAL_PRINT
-//         Serial.println("m_ruban : boucle infinie");
-// #endif
-//       }
-//       else
-//       {
-//         if (m_nbBoucle > 0) // Il reste des boucles à faire
-//         {
-//           m_currentLed = m_ruban->nextStep();
-// #if OUTPUT_SERIAL_PRINT
-//           Serial.print("Boucle n°");
-//           Serial.print(m_nbBoucle);
-//           Serial.print("   Led n°");
-//           Serial.println(m_currentLed);
-// #endif
-//           if (m_currentLed - LEDSCOUNT == 0) // A-t-on fini une boucle ?
-//           {
-//             m_nbBoucle--; // boucle suivante
-//           }
-//         }
-//         else // C'est la dernière boucle
-//         {
-//           if (m_currentLed == LEDSCOUNT) //On est arrivé à la fin du ruban
-//           {
-//             m_currentLed = m_ruban->stop();
-// #if OUTPUT_SERIAL_PRINT
-//             Serial.print("Plus de boucle");
-//             Serial.print("     Arrêté à la Led n°");
-//             Serial.println(m_currentLed);
-//             Serial.print("m_stripe stoppé ");
-//             Serial.println(m_ruban->isStopped());
-// #endif
-//           }
-//         }
-//       }
-//     }
+    //     if (m_ruban->isStopped() == false) // on ne fait rien si le ruban est arrêté
+    //     {
+    //       if (m_nbBoucle == -1) // nombre de boucles infini
+    //       {
+    //         m_currentLed = m_ruban->nextStep();
+    // #if OUTPUT_SERIAL_PRINT
+    //         Serial.println("m_ruban : boucle infinie");
+    // #endif
+    //       }
+    //       else
+    //       {
+    //         if (m_nbBoucle > 0) // Il reste des boucles à faire
+    //         {
+    //           m_currentLed = m_ruban->nextStep();
+    // #if OUTPUT_SERIAL_PRINT
+    //           Serial.print("Boucle n°");
+    //           Serial.print(m_nbBoucle);
+    //           Serial.print("   Led n°");
+    //           Serial.println(m_currentLed);
+    // #endif
+    //           if (m_currentLed - LEDSCOUNT == 0) // A-t-on fini une boucle ?
+    //           {
+    //             m_nbBoucle--; // boucle suivante
+    //           }
+    //         }
+    //         else // C'est la dernière boucle
+    //         {
+    //           if (m_currentLed == LEDSCOUNT) //On est arrivé à la fin du ruban
+    //           {
+    //             m_currentLed = m_ruban->stop();
+    // #if OUTPUT_SERIAL_PRINT
+    //             Serial.print("Plus de boucle");
+    //             Serial.print("     Arrêté à la Led n°");
+    //             Serial.println(m_currentLed);
+    //             Serial.print("m_stripe stoppé ");
+    //             Serial.println(m_ruban->isStopped());
+    // #endif
+    //           }
+    //         }
+    //       }
+    //     }
   }
 }
 
 void setup_wifi()
 {
+  Serial.println("SetupWifi");
   // Juste pour moi ip 192.168.1.180 attribuée par le routeur
   delay(10);
   // On essaie de se connecter au WIFI
