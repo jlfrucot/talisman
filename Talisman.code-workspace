@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.ino": "cpp",
+			"*.tcc": "cpp",
+			"algorithm": "cpp"
+		}
+	}
+}

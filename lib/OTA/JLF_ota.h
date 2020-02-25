@@ -60,6 +60,7 @@ const char *serverIndex =
     "<input type='file' name='update'>"
     "<input type='submit' value='Update'>"
     "</form>"
+    
     "<div id='prg'>progress: 0%</div>"
     "<script>"
     "$('form').submit(function(e){"
@@ -91,21 +92,92 @@ const char *serverIndex =
     "});"
     "</script>";
 
+const char* commandReturn =
+"<!DOCTYPE html>"
+"<html>"
+"<head>"
+"<meta http-equiv=\"refresh\" content=\"0;url=/command\">"
+"</head>"
+"<body>"
+"</body>"
+"</html>"
+;
+
 /*
+  La page de commande des leds(puis des rubans)
+  Chaque action est commandée par un lien qui appelle une adresse de la forme /mon_action
+  Le serveur embarqué intercepte cette adresse et exécute la fonction callback passée en paramètre dans server.on()
+  La page de retour "commandReturn" est passée dans le test de la fonction server.on()
+  */
+const char *commandIndex =
+"<a href='/redOn'>Rouge On</a>"
+"<a href='/redOff'> Rouge Off</a><p>"
+"<a href='/greenOn'>Vert On</a>"
+"<a href='/greenOff'> Vert Off</a><p>"
+"<a href='/yellowOn'>Jaune On</a>"
+"<a href='/yellowOff'> Jaune Off</a><p>";
+// "<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>"
+// "<form name='commandForm'>"
+//     "<input type='submit' onclick='redOn()' value='Rouge On'>"
+//     "</form>"
+//     "<script>"
+//     "$.ajaxSetup({timeout:1000});"
+//     "function servo(pos) {"
+//       "$.get('/?value=' + 'redon');"
+//       "{Connection: close};"
+//       "}"
+//       "</script>";
+/*
+
 * initialisations et lancement du serveur web utilisé pour les mises à jour OTA
 */
 void OTAServerInit()
 {
-    server.on("/", HTTP_GET, []() {
-        server.sendHeader("Connection", "close");
-        server.send(200, "text/html", loginIndex);
+  server.on("/", HTTP_GET, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/html", loginIndex);
+  });
+
+    server.on("/command", HTTP_GET, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/html", commandIndex);
+  });
+  server.on("/serverIndex", HTTP_GET, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/html", serverIndex);
+  });
+  ///////////////////////////////// Essai
+    server.on("/redOn", HTTP_GET, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/html", (redOn()) ? commandReturn : "Fail");
     });
-    server.on("/serverIndex", HTTP_GET, []() {
-        server.sendHeader("Connection", "close");
-        server.send(200, "text/html", serverIndex);
+
+        server.on("/redOff", HTTP_GET, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/html", (redOff()) ? commandReturn : "Fail");
     });
-    /*handling uploading firmware file */
-    server.on("/update", HTTP_POST, []() {
+
+        server.on("/greenOn", HTTP_GET, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/html", (greenOn()) ? commandReturn : "Fail");
+    });
+
+        server.on("/greenOff", HTTP_GET, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/html", (greenOff()) ? commandReturn : "Fail");
+    });
+
+        server.on("/yellowOn", HTTP_GET, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/html", (yellowOn()) ? commandReturn : "Fail");
+    });
+
+        server.on("/yellowOff", HTTP_GET, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/html", (yellowOff()) ? commandReturn : "Fail");
+    });
+  /*handling uploading firmware file */
+  server.on("/update", HTTP_POST, []() {
     server.sendHeader("Connection", "close");
     server.send(200, "text/plain", (Update.hasError()) ? "FAIL" : "OK");
     ESP.restart(); }, []() {
@@ -126,7 +198,8 @@ void OTAServerInit()
       } else {
         Update.printError(Serial);
       }
-    } });
+     }});
     server.begin();
+
 }
 #endif
