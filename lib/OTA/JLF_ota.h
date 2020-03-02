@@ -92,6 +92,7 @@ const char *serverIndex =
     "});"
     "</script>";
 
+// Pseudo page de retour renvoie vers /commandIndex
 const char* commandReturn =
 "<!DOCTYPE html>"
 "<html>"
@@ -133,20 +134,17 @@ const char *commandIndex =
 */
 void OTAServerInit()
 {
+  // Page racine
   server.on("/", HTTP_GET, []() {
     server.sendHeader("Connection", "close");
     server.send(200, "text/html", loginIndex);
   });
-
+  // Page des commandes à executer
     server.on("/command", HTTP_GET, []() {
     server.sendHeader("Connection", "close");
     server.send(200, "text/html", commandIndex);
   });
-  server.on("/serverIndex", HTTP_GET, []() {
-    server.sendHeader("Connection", "close");
-    server.send(200, "text/html", serverIndex);
-  });
-  ///////////////////////////////// Essai
+  // Pseudo pages d'execution des commandes
     server.on("/redOn", HTTP_GET, []() {
     server.sendHeader("Connection", "close");
     server.send(200, "text/html", (redOn()) ? commandReturn : "Fail");
@@ -176,6 +174,11 @@ void OTAServerInit()
     server.sendHeader("Connection", "close");
     server.send(200, "text/html", (yellowOff()) ? commandReturn : "Fail");
     });
+   // Page d'update du firmware
+  server.on("/serverIndex", HTTP_GET, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/html", serverIndex);
+  });
   /*handling uploading firmware file */
   server.on("/update", HTTP_POST, []() {
     server.sendHeader("Connection", "close");

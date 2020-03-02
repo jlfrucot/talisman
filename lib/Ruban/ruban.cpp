@@ -1,7 +1,7 @@
 
 
 #include "ruban.h"
-#define OUTPUT_SERIAL_PRINT 0 // 0 pas de sortie sur le moniteur série, 1 sortie sur le moniteur série
+#define OUTPUT_SERIAL_PRINT 1 // 0 pas de sortie sur le moniteur série, 1 sortie sur le moniteur série
 
 Ruban::Ruban(uint16_t ledsCount, uint8_t pin, neoPixelType type)
 
@@ -73,7 +73,7 @@ bool Ruban::isStopped()
 }
 uint16_t Ruban::nextStep()
 {
-    if (m_stopped == false) // 
+    if (m_stopped == false) //
     {
         m_pixels->clear();
 
@@ -84,6 +84,10 @@ uint16_t Ruban::nextStep()
         m_pixels->show();
         m_currentStep = (m_currentStep + 1) % (m_numPixels + m_sizeMotif);
     }
+#if OUTPUT_SERIAL_PRINT
+    Serial.print("NEXTSTEP  ");
+    Serial.println(m_currentStep);
+#endif
     return m_currentStep;
 }
 
